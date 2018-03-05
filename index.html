@@ -109,14 +109,14 @@ for i in range(0, 5):
         var ws = new WebSocket("ws://" + ip + "/ws");
 
         ws.onopen = function(evt) {
-            zone_network.innerHTML = "Connexion robot => <strong>OK</strong>";
+            zone_network.innerHTML = "Connexion robot => <strong>OK (...)</strong>";
             zone_network.className="alert alert-success";
             console.log("OPEN");
             bouton_executer.disabled = false;
         }
 
         ws.onclose = function(evt) {
-            zone_network.innerHTML = "Connexion robot => <strong>PERDUE</strong>";
+            zone_network.innerHTML = "Connexion robot => <strong>PERDUE (...)</strong>";
             zone_network.className="alert alert-danger";
             console.log("CLOSE");
             ws = null;
@@ -132,6 +132,11 @@ for i in range(0, 5):
             console.log("  exec_uid : " + trame.uid);
             console.log("  clients : " + trame.clients);
 
+            if (trame.action == "informer") {
+                if (trame.details == "clients") {
+                    zone_network.innerHTML = "Connexion robot => <strong>OK (" + trame.clients + ")</strong>";
+                }
+            }
             if (trame.pid == 0) {
                 zone_sortie.className="alert alert-danger";
             } else {
