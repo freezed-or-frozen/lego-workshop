@@ -156,7 +156,12 @@ func sendToAllResponse(s string, a string, d string, p int, u string, c int) {
 // Fonction pour ajouter un client à la liste
 func addClient(conn *websocket.Conn) {
 	// Ajout de la connexion au tableau de clients
-	Clients[NbClients] = conn
+	for i, _ := range Clients {
+		if (Clients[i] == nil) {
+			Clients[i] = conn
+			break
+		}
+	}
 	NbClients++
 	fmt.Println(" => addClient :", Clients)
 
