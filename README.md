@@ -11,8 +11,8 @@ There are two main parts :
 Both communicates with websockets.
 
 
-2 - Cahier des charges
-======================
+2 - Functionalities
+===================
 Main functionalities :
   * edit Python code in a web page (lines, color syntax)
   * execute Python code remotely
@@ -52,7 +52,16 @@ buttons on the Lego robot :
   * lego-workshop
 
 
-4 - Webography
+4 - ToDo
+========
+ToDo list :
+  * translate source code in english
+  * refactor some parts of source code
+  * add some unit tests
+  * ...
+
+
+5 - Webography
 ===============
 Some useful links :
   * https://godoc.org/github.com/gorilla/websocket (websocket documentation)
