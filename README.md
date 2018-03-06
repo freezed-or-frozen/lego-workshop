@@ -3,45 +3,57 @@
 
 1 - Introduction
 ================
-Application Golang pour proposer un IDE web de développement pour les robots
-Lego Mindstorm EV3.
+LEGO Workshop is a web IDE to develop Python script for the Lego Mindstorm EV3 robot.
+It is something between IPython (Python web IDE) and Processing/arduino (simplicity)
+There are two main parts :
+  * **server side** written in Golang to start and stop Python scripts remotely
+  * **client side** written in HTML, CSS, Javascript to edit Python code
+Both communicates with websockets.
 
 
 2 - Cahier des charges
 ======================
-Liste des fonctionnalités principales :
-  * générer une page web pour l'ide avec l'adresse IP du robot LEGO
-  * récupérer le code source
-  * écrire le code source récupéré dans un script Python
-  * éxecuter ce script Python
-  * gérer plusieurs websocket en même temps
-  * arrêter un script Python 
-  * informer tous les clients de l'état du robot
+Main functionalities :
+  * edit Python code in a web page (lines, color syntax)
+  * execute Python code remotely
+  * stop execution
+  * tell every client about robot's state (execution, clients connected)
 
-Liste des fonctionnalités secondaires :
-  * fg,fg,fg,
-  * ...
+Future functionalities :
+  * use nickname
+  * add library documentation and help page
+  * print robot state (motors, sensors) with a SVG graphic
+  * add other language (C++)
 
 
-3 - Outils
+3 - Tools
 ==========
-Installation des outils sur le robot Lego Mindstorm EV3
+3.1 - Installation
+------------------
+Assuming you already install ev3dev Linux distribution on an SD card and buy
+an USB wifi dongle, you have to install some golang packages and library (for
+websockets)
 ```bash
+$ ssh robot@1.2.3.4
 $ sudo apt install golang-go golang-go-linux-arm golang-go.tools golang-src (packages de base)
+$ go get github.com/gorilla/websocket
 ```
 
-Installation d'une librairie gérant les websockets
+3.2 - Compilation and execution
+-------------------------------
+Assuming you already download server.go on the robot :
 ```bash
-$ sudo apt install golang-websocket-dev (option 1)
-$ sudo apt install golang-golang-x-net-dev (option 2)
-$ go get github.com/gorilla/websocket (option 3)
+$ go build
+$ ./lego-workshop
 ```
+You can also execute **lego-workshop** program with Brickman interface and
+buttons on the Lego robot :
+  * File manager...
+  * lego-workshop
 
-Options 3 retenue
-  * https://godoc.org/github.com/gorilla/websocket
 
-
-4 - Webographie
+4 - Webography
 ===============
-Quelques liens pour aller plus loin
-  * https://gist.github.com/tmichel/7390690 (démonstration de l'utilisation des websocket gorilla en golang)
+Some useful links :
+  * https://godoc.org/github.com/gorilla/websocket (websocket documentation)
+  * https://gist.github.com/tmichel/7390690 (tutorial on gorilla webscoket in golang)
