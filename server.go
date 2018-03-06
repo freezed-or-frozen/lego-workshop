@@ -71,20 +71,32 @@ func executePythonScript(code string, conn *websocket.Conn) {
 	// Lancement du script Python
 	err := cmd.Start()
 	PID = cmd.Process.Pid
-	fmt.Println("   + lancement avec PID : ", PID)
+	fmt.Println("  + lancement avec PID : ", PID)
 	sendToAllResponse("robot", "informer", "executing", PID, "", NbClients)
 
 	// Attente de la fin du script
 	err = cmd.Wait()
-	fmt.Println("  + arrêt : ")
+	fmt.Println("  + arrêt du processus : ", err)
+	etat := 0
+
+	resultat := ""
 	if err != nil {
+		if (err.Error() == "exit status 1") {
+			etat += 100
+		}
+		if (err.Error() == "signal: killed") {
+			etat += 566
+		}
 		errStr := string(stderr.Bytes())
-		fmt.Println(errStr)
-		sendToOneResponse(conn, "robot", "retourner", errStr, 666, "", NbClients)
+		resultat = errStr
 	} else {
 		outStr := string(stdout.Bytes())
-		sendToOneResponse(conn, "robot", "retourner", outStr, 0, "", NbClients)
+		resultat = outStr
 	}
+	// On retourne le résultat de l'exécution au client
+	fmt.Println(etat)
+	fmt.Println(resultat)
+	sendToOneResponse(conn, "robot", "retourner", resultat, etat, "", NbClients)
 
 	// De nouveau libre pour une nouvelle exécution
 	PID = 0
@@ -255,7 +267,7 @@ func StaticFileHandler(response http.ResponseWriter, request *http.Request) {
 func main() {
 	// Bannière d'accueil du serveur
 	fmt.Printf("*********************************\n")
-	fmt.Printf("*** LEGO Workshop server v0.2 ***\n")
+	fmt.Printf("*** LEGO Workshop server v0.3 ***\n")
 	fmt.Printf("*********************************\n")
 	fmt.Println(" => Lancement en cours...")
 

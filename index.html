@@ -155,10 +155,15 @@ for i in range(0, 5):
             if (trame.action == "retourner") {
                 if (trame.exec_pid == 0) {
                     zone_sortie.className="alert alert-success";
-                } else {
+                    zone_sortie.innerHTML = "<strong>SUCCESS</strong><br /><pre>" + trame.details + "</pre>";
+                } else if (trame.exec_pid == 100) {
                     zone_sortie.className="alert alert-danger";
+                    zone_sortie.innerHTML = "<strong>ERROR</strong><br /><pre>" + trame.details + "</pre>";
+                } else if (trame.exec_pid >= 566) {
+                    zone_sortie.className="alert alert-danger";
+                    zone_sortie.innerHTML = "<strong>KILLED</strong><br /><pre>" + trame.details + "</pre>";
                 }
-                zone_sortie.innerHTML = "<pre>" + trame.details + "</pre>";
+
             }
             // Changement d'état du bouton
             //bouton_executer.disabled = false;
@@ -187,6 +192,10 @@ for i in range(0, 5):
 
             // Envoi au travers de la websocket après JSONification
             ws.send( JSON.stringify(trame) );
+
+            // Mise à jour de l'IHM
+            zone_sortie.className="alert alert-info";
+            zone_sortie.innerHTML = "<strong>WAITING</strong><br /><pre>...</pre>";
         });
 
 
