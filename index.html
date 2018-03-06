@@ -34,10 +34,10 @@
         <h2>[État du robot]</h2>
         <div class="row">
             <div class="col">
-                <div id="network" class="alert alert-info" role="alert">Connexion robot => ...</div>
+                <div id="network" class="alert alert-info" role="alert">Connexion robot => <strong>...</strong></div>
             </div>
             <div class="col">
-                <div id="execution" class="alert alert-info" role="alert">Exécution en cours => ...</div>
+                <div id="execution" class="alert alert-info" role="alert">Exécution en cours => <strong>...</strong></div>
             </div>
         </div>
 
@@ -89,6 +89,7 @@ for i in range(0, 5):
         var bouton_arreter = document.getElementById("arreter");
         var zone_sortie = document.getElementById("sortie");
         var zone_network = document.getElementById("network");
+        var zone_execution = document.getElementById("execution");
 
         // Initialisation des boutons
         bouton_executer.disabled = true;
@@ -128,25 +129,40 @@ for i in range(0, 5):
             console.log("  source : " + trame.source);
             console.log("  action : " + trame.action);
             console.log("  details : " + trame.details);
-            console.log("  exec_pid : " + trame.pid);
-            console.log("  exec_uid : " + trame.uid);
+            console.log("  exec_pid : " + trame.exec_pid);
+            console.log("  exec_uid : " + trame.exec_uid);
             console.log("  clients : " + trame.clients);
 
             if (trame.action == "informer") {
                 if (trame.details == "clients") {
                     zone_network.innerHTML = "Connexion robot => <strong>OK (" + trame.clients + ")</strong>";
                 }
-            }
-            if (trame.pid == 0) {
-                zone_sortie.className="alert alert-danger";
-            } else {
-                zone_sortie.className="alert alert-success";
-            }
-            zone_sortie.innerHTML = "<pre>" + trame.details + "</pre>";
 
+                if (trame.details == "executing") {
+                    if (trame.exec_pid == 0) {
+                        zone_execution.className="alert alert-info";
+                        bouton_executer.disabled = false;
+                        bouton_arreter.disabled = true;
+                    } else {
+                        zone_execution.className="alert alert-warning";
+                        bouton_executer.disabled = true;
+                        bouton_arreter.disabled = false;
+                    }
+                    zone_execution.innerHTML = "Exécution en cours => <strong>(" + trame.exec_pid + ")</strong>";
+                }
+            }
+
+            if (trame.action == "retourner") {
+                if (trame.exec_pid == 0) {
+                    zone_sortie.className="alert alert-success";
+                } else {
+                    zone_sortie.className="alert alert-danger";
+                }
+                zone_sortie.innerHTML = "<pre>" + trame.details + "</pre>";
+            }
             // Changement d'état du bouton
-            bouton_executer.disabled = false;
-            bouton_arreter.disabled = true;
+            //bouton_executer.disabled = false;
+            //bouton_arreter.disabled = true;
         }
 
         ws.onerror = function(evt) {
@@ -157,11 +173,9 @@ for i in range(0, 5):
 
         // Gestion du bouton "Exécuter"
         $("#executer").click(function() {
-            // Changement d'état du bouton
-            bouton_executer.disabled = true;
-            bouton_arreter.disabled = false;
 
             // Préparation de la trame
+            console.log("Bouton [EXECUTER]");
             var trame = {
                 source: pseudo.value,
                 action: "lancer",
@@ -173,71 +187,25 @@ for i in range(0, 5):
 
             // Envoi au travers de la websocket après JSONification
             ws.send( JSON.stringify(trame) );
-
-
-            //socket.emit("execution_start", { pseudo: pseudo_valeur, code_source: code_source_valeur });
-
-            /*
-            $.ajax({
-                method: "POST",
-                url: "/executer",
-                data: { pseudo: pseudo_valeur, code_source: code_source_valeur },
-                //data: $( "form").serialize(),
-                success: function(response) {
-                    console.log(response);
-                    $("#executer").prop("disabled",false);
-                    $("#arreter").prop("disabled", true);
-
-                    var resultat = jQuery.parseJSON(response);
-
-                    var stdout = resultat.stdout;
-                    stdout = stdout.replace("b'", "");
-                    stdout = stdout.replace("'", "");
-                    stdout = stdout.replace("\\n", "<br />");
-                    $("#stdout").html("<pre>" + stdout + "</pre>");
-
-                    var stderr = resultat.stderr;
-                    stderr = stderr.replace("b'", "");
-                    stderr = stderr.replace("'", "");
-                    stderr = stderr.replace("\\n", "<br />");
-                    $("#stderr").html("<pre>" + stderr + "</pre>");
-                },
-                error: function(error) {
-                    console.log(error);
-                    $("#network").html(error);
-                }
-            })
-            */
         });
+
 
         // Gestion du bouton "Arrêter"
         $("#arreter").click(function() {
-            // Changement d'état du bouton
-            bouton_executer.disabled = false;
-            bouton_arreter.disabled = true;
 
-            //$("#executer").prop("disabled",false);
-            //$("#arreter").prop("disabled", true);
-            var pseudo_valeur = $("#pseudo").val();
+            // Préparation de la trame
+            console.log("Bouton [ARRETER]");
+            var trame = {
+                source: pseudo.value,
+                action: "arreter",
+                details: "",
+                exec_pid: 0,
+                exec_uid: "",
+                clients: 0
+            };
 
-            //socket.emit("execution_stop", { pseudo: pseudo_valeur, code_source: code_source_valeur });
-
-            /*
-            $.ajax({
-                method: "POST",
-                url: "/arreter",
-                data: { pseudo: pseudo_valeur },
-                //data: $( "form").serialize(),
-                success: function(response) {
-                    console.log(response);
-                    //$("#executer").prop("disabled",false);
-                    //$("#arreter").prop("disabled", true);
-                },
-                error: function(error) {
-                    $("#network").html(error);
-                }
-            })
-            */
+            // Envoi au travers de la websocket après JSONification
+            ws.send( JSON.stringify(trame) );
         });
     </script>
 

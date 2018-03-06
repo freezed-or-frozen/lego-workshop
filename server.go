@@ -34,12 +34,13 @@ var upgrader = websocket.Upgrader{
 var PID = 0
 var UID = ""
 var NbClients = 0
-var Clients [4]*websocket.Conn
+var Clients [3]*websocket.Conn
+var PythonScript *exec.Cmd
 
 
 // Fonction pour lancer un script Python dans un nouveau processus
 func writePythonScript(code string) {
-	fmt.Println(" => Ecriture du script : ", code)
+	fmt.Println(" => Ecriture du code source dans todo.py :\n", code)
 
 	// Conversion en octets
 	octets := []byte(code)
@@ -53,9 +54,42 @@ func writePythonScript(code string) {
 
 
 // Fonction pour lancer un script Python dans un nouveau processus
-func executePythonScript() string {
-	fmt.Println(" => Lancement du script todo.py : ")
+func executePythonScript(code string, conn *websocket.Conn) {
+	// Ecriture du code dans un script Python
+	writePythonScript(code)
 
+	// Exécution du script
+	fmt.Println(" => Lancement du script todo.py : ")
+	cmd := exec.Command("python3", "./todo.py")
+	PythonScript = cmd
+
+	// Redirections des sorties stdout et stderr
+	var stdout, stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+
+	// Lancement du script Python
+	err := cmd.Start()
+	PID = cmd.Process.Pid
+	fmt.Println("   + lancement avec PID : ", PID)
+	sendToAllResponse("robot", "informer", "executing", PID, "", NbClients)
+
+	// Attente de la fin du script
+	err = cmd.Wait()
+	fmt.Println("  + arrêt : ")
+	if err != nil {
+		errStr := string(stderr.Bytes())
+		fmt.Println(errStr)
+		sendToOneResponse(conn, "robot", "retourner", errStr, 666, "", NbClients)
+	} else {
+		outStr := string(stdout.Bytes())
+		sendToOneResponse(conn, "robot", "retourner", outStr, 0, "", NbClients)
+	}
+
+	// De nouveau libre pour une nouvelle exécution
+	PID = 0
+	sendToAllResponse("robot", "informer", "executing", 0, "", NbClients)
+/*
 	// Exécution du script
 	cmd := exec.Command("python3", "./todo.py")
 
@@ -63,6 +97,7 @@ func executePythonScript() string {
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 	err := cmd.Run()
+	fmt.Println("   + PID : ", cmd.Process.Pid)
 	if err != nil {
 		errStr := string(stderr.Bytes())
 		fmt.Println(errStr)
@@ -70,6 +105,7 @@ func executePythonScript() string {
 	}
 	outStr := string(stdout.Bytes())
 	return outStr
+*/
 }
 
 
@@ -87,7 +123,7 @@ func sendToOneResponse(conn *websocket.Conn, s string, a string, d string, p int
 	// Envoi de la trame préparée
 	err := conn.WriteJSON(reponse)
 	if err != nil {
-		fmt.Println("=> ERROR with WriteJSON() :", err)
+		fmt.Println(" => ERROR with WriteJSON() :", err)
 		return false
 	}
 
@@ -98,22 +134,41 @@ func sendToOneResponse(conn *websocket.Conn, s string, a string, d string, p int
 // Fonction pour envoyer une reponse sur la websocket
 func sendToAllResponse(s string, a string, d string, p int, u string, c int) {
 	for _, conn := range Clients {
-        sendToOneResponse(conn, s, a, d, p, u, c)
+		if (conn != nil) {
+        	sendToOneResponse(conn, s, a, d, p, u, c)
+		}
     }
 }
 
 
 // Fonction pour ajouter un client à la liste
 func addClient(conn *websocket.Conn) {
+	// Ajout de la connexion au tableau de clients
 	Clients[NbClients] = conn
 	NbClients++
+	fmt.Println(" => addClient :", Clients)
+
+	// Envoi d'un message d'information à tout le monde
 	sendToAllResponse("robot", "informer", "clients", 0, "", NbClients)
 }
 
 
 // Fonction pour supprimer un client de la liste
 func removeClient(conn *websocket.Conn) {
+	// Suppression de la connexion du tableau de clients
+	for i, _ := range Clients {
+		if (Clients[i] == conn) {
+			Clients[i] = nil
+		}
+	}
+	fmt.Println(" => removeClient :", Clients)
+
+	// Fermeture de la connexion
 	conn.Close()
+	NbClients--
+
+	// Envoi d'un message d'information à tout le monde
+	sendToAllResponse("robot", "informer", "clients", 0, "", NbClients)
 }
 
 
@@ -124,7 +179,7 @@ func ClientHandler(conn *websocket.Conn) {
 		requete := Trame{}
 		err := conn.ReadJSON(&requete)
 		if err != nil {
-			fmt.Println("=> ERROR with ReadJSON() :", err)
+			fmt.Println(" => ERROR with ReadJSON() :", err)
 			break
 		}
 		fmt.Println(" => WebSockethandler :")
@@ -140,24 +195,34 @@ func ClientHandler(conn *websocket.Conn) {
 			// On teste si le robot est libre d'exécution
 			if (PID == 0) {
 				// On confirme le lancement de l'exécution
-				sendToOneResponse(conn, "robot", "informer", "starting", 0, "", NbClients)
+				//sendToOneResponse(conn, "robot", "informer", "writing", 0, "", NbClients)
 
 				// Ecriture du code dans un script Python
-				writePythonScript(requete.Details)
+				//writePythonScript(requete.Details)
+
+				// On confirme le lancement de l'exécution
+				//sendToOneResponse(conn, "robot", "informer", "executing", 0, "", NbClients)
 
 				// Exécution du script fraichement créé
-				resultat := executePythonScript()
+				go executePythonScript(requete.Details, conn)
 
-				// Réponse renvoyée sur la websocket
-				sendToOneResponse(conn, "robot", "informer", resultat, 0, "", NbClients)
+
 			}
 		} else if (requete.Action == "arreter") {
-
+			fmt.Println("Demande d'arret en cours avec PID=", PID)
+			if (PID != 0) {
+				err := PythonScript.Process.Kill()
+				if err != nil {
+					fmt.Println(" => ERROR with Kill() :", err)
+					break
+				}
+			}
 		}
 	}
 
 	// Fermeture de la connexion
 	//conn.Close()
+	removeClient(conn)
 }
 
 
@@ -169,13 +234,10 @@ func WebsocketHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		return
 	}
-	defer removeClient(conn)
+	//defer removeClient(conn)
 
 	// Ajout de la connexion du client au tableau
-	Clients[NbClients] = conn
-	NbClients++
-	sendToAllResponse("robot", "informer", "clients", 0, "", NbClients)
-	//sendResponse(conn, "robot", "informer", "clients", 0, "", NbClients)
+	addClient(conn)
 
 	// Lancement d'un thread pour gérer la connexion
 	go ClientHandler(conn)
