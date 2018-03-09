@@ -54,7 +54,7 @@ func writePythonScript(code string) {
 
 
 // Fonction pour lancer un script Python dans un nouveau processus
-func executePythonScript(code string, conn *websocket.Conn) {
+func executePythonScript(who string, code string, conn *websocket.Conn) {
 	// Ecriture du code dans un script Python
 	writePythonScript(code)
 
@@ -72,7 +72,7 @@ func executePythonScript(code string, conn *websocket.Conn) {
 	err := cmd.Start()
 	PID = cmd.Process.Pid
 	fmt.Println("  + lancement avec PID : ", PID)
-	sendToAllResponse("robot", "informer", "executing", PID, "", NbClients)
+	sendToAllResponse(who, "informer", "executing", PID, "", NbClients)
 
 	// Attente de la fin du script
 	err = cmd.Wait()
@@ -80,12 +80,14 @@ func executePythonScript(code string, conn *websocket.Conn) {
 	etat := 0
 
 	resultat := ""
+	origine := who
 	if err != nil {
 		if (err.Error() == "exit status 1") {
 			etat += 100
 		}
 		if (err.Error() == "signal: killed") {
 			etat += 566
+			origine = UID
 		}
 		errStr := string(stderr.Bytes())
 		resultat = errStr
@@ -96,14 +98,14 @@ func executePythonScript(code string, conn *websocket.Conn) {
 	// On retourne le résultat de l'exécution au client
 	fmt.Println(etat)
 	fmt.Println(resultat)
-	sendToOneResponse(conn, "robot", "retourner", resultat, etat, "", NbClients)
+	sendToOneResponse(conn, origine, "retourner", resultat, etat, "", NbClients)
 
 	// On réinitialiser le robot
 	resetRobot()
 
 	// De nouveau libre pour une nouvelle exécution
 	PID = 0
-	sendToAllResponse("robot", "informer", "executing", 0, "", NbClients)
+	sendToAllResponse(who, "informer", "executing", 0, "", NbClients)
 /*
 	// Exécution du script
 	cmd := exec.Command("python3", "./todo.py")
@@ -239,13 +241,14 @@ func ClientHandler(conn *websocket.Conn) {
 				//sendToOneResponse(conn, "robot", "informer", "executing", 0, "", NbClients)
 
 				// Exécution du script fraichement créé
-				go executePythonScript(requete.Details, conn)
+				go executePythonScript(requete.Source, requete.Details, conn)
 
 
 			}
 		} else if (requete.Action == "arreter") {
 			fmt.Println("Demande d'arret en cours avec PID=", PID)
 			if (PID != 0) {
+				UID = requete.Source
 				err := PythonScript.Process.Kill()
 				if err != nil {
 					fmt.Println(" => ERROR with Kill() :", err)

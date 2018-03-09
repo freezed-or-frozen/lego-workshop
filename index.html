@@ -23,7 +23,7 @@
         <img class="logo" src="img/lego_mindstorm_ev3.png" />
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <form class="form-inline my-2 my-lg-0">
-                <input id="pseudo" class="form-control mr-sm-2" type="text" value="your_pseudo">
+                <input id="pseudo" class="form-control mr-sm-2" type="text" value="your_name">
                 <button id="executer" type="button" class="btn btn-success my-2 my-sm-0">Start</button>
                 <button id="arreter" type="button" class="btn btn-danger my-2 my-sm-0">Stop</button>
                 <a href="./help.html" target="_blank"><button id="aider" type="button" class="btn btn-info my-2 my-sm-0">Help</button></a>
@@ -114,14 +114,14 @@ for i in range(0, 5):
         var ws = new WebSocket("ws://" + ip + "/ws");
 
         ws.onopen = function(evt) {
-            zone_network.innerHTML = "Connexion robot => <strong>OK (...)</strong>";
+            zone_network.innerHTML = "Connection => <strong>OK (...)</strong>";
             zone_network.className="alert alert-success";
             console.log("OPEN");
             bouton_executer.disabled = false;
         }
 
         ws.onclose = function(evt) {
-            zone_network.innerHTML = "Connexion robot => <strong>PERDUE (...)</strong>";
+            zone_network.innerHTML = "Connection => <strong>LOST (...)</strong>";
             zone_network.className="alert alert-danger";
             console.log("CLOSE");
             ws = null;
@@ -139,7 +139,7 @@ for i in range(0, 5):
 
             if (trame.action == "informer") {
                 if (trame.details == "clients") {
-                    zone_network.innerHTML = "Connexion robot => <strong>OK (" + trame.clients + ")</strong>";
+                    zone_network.innerHTML = "Connection => <strong>OK (" + trame.clients + ")</strong>";
                 }
 
                 if (trame.details == "executing") {
@@ -152,20 +152,20 @@ for i in range(0, 5):
                         bouton_executer.disabled = true;
                         bouton_arreter.disabled = false;
                     }
-                    zone_execution.innerHTML = "Exécution en cours => <strong>(PID=" + trame.exec_pid + ")</strong>";
+                    zone_execution.innerHTML = "Execution => <strong>OK (pid=" + trame.exec_pid + ")</strong> by <em>" + trame.source + "</em>";
                 }
             }
 
             if (trame.action == "retourner") {
                 if (trame.exec_pid == 0) {
                     zone_sortie.className="alert alert-success";
-                    zone_sortie.innerHTML = "<strong>SUCCESS</strong><br /><pre>" + trame.details + "</pre>";
+                    zone_sortie.innerHTML = "<strong>SUCCESS</strong> by <em>" + trame.source + "</em><br /><pre>" + trame.details + "</pre>";
                 } else if (trame.exec_pid == 100) {
                     zone_sortie.className="alert alert-danger";
-                    zone_sortie.innerHTML = "<strong>ERROR</strong><br /><pre>" + trame.details + "</pre>";
+                    zone_sortie.innerHTML = "<strong>ERROR</strong> by <em>" + trame.source + "</em><br /><pre>" + trame.details + "</pre>";
                 } else if (trame.exec_pid >= 566) {
                     zone_sortie.className="alert alert-danger";
-                    zone_sortie.innerHTML = "<strong>KILLED</strong><br /><pre>" + trame.details + "</pre>";
+                    zone_sortie.innerHTML = "<strong>KILLED</strong> by <em>" + trame.source + "</em><br /><pre>" + trame.details + "</pre>";
                 }
 
             }
@@ -176,7 +176,7 @@ for i in range(0, 5):
 
         ws.onerror = function(evt) {
             zone_network.innerHTML = "ERROR: " + evt.data;
-            console.log("Connexion robot => ERROR (" + evt.data + ")");
+            console.log("Connection => ERROR (" + evt.data + ")");
         }
 
 
