@@ -22,32 +22,50 @@ Main functionalities :
   - [X] add an help page with code example and documentation
 
 Future functionalities :
-  - [ ] use nickname
+  - [X] use nickname
   - [ ] print robot state (motors, sensors) with a SVG graphic
   - [ ] add other language (C++)
 
 
-3 - Tools
-==========
-3.1 - Installation
-------------------
+3 - Installation
+================
+3.1 - From binary version
+-------------------------
 Assuming you already install ev3dev Linux distribution on an SD card and buy
-an USB wifi dongle, you have to install some golang packages and library (for
-websockets)
+an USB wifi dongle, you just need to upload **lego-workshop** binary to
+the robot with SSH
 ```bash
-$ ssh robot@1.2.3.4
-$ sudo apt install golang-go golang-go-linux-arm golang-go.tools golang-src (packages de base)
+$ git clone https://github.com/freezed-or-frozen/lego-workshop.git
+$ cd lego-workshop
+$ scp lego-workshop robot@1.2.3.4:/home/robot/ (password=maker)
+```
+Now you can execute **lego-workshop** program with Brickman interface and
+buttons on the Lego robot :
+  * File manager...
+  * lego-workshop
+
+3.2 - From source version
+-------------------------
+On your computer, you need to install some golang packages and library (for websockets)
+```bash
+$ sudo apt install golang-go golang-go-linux-arm golang-go.tools golang-src
 $ go get github.com/gorilla/websocket
 ```
 
-3.2 - Compilation and execution
--------------------------------
-Assuming you already download server.go on the robot :
+Clone this repository and compile/package a binary
 ```bash
+$ git clone https://github.com/freezed-or-frozen/lego-workshop.git
+$ cd lego-workshop
 $ GOOS=linux GOARCH=arm GOARM=5 go build
-$ ./lego-workshop
+$ sudo GOPATH=$HOME/golang GOOS=linux GOARCH=arm GOARM=5 go install
 ```
-You can also execute **lego-workshop** program with Brickman interface and
+
+Upload the binary to the robot
+```bash
+$ cd $HOME/golang/bin/linux_arm
+$ scp lego-workshop robot@1.2.3.4:/home/robot/ (password=maker)
+```
+Now you can execute **lego-workshop** program with Brickman interface and
 buttons on the Lego robot :
   * File manager...
   * lego-workshop
