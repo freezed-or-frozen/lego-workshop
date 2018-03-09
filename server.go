@@ -98,6 +98,9 @@ func executePythonScript(code string, conn *websocket.Conn) {
 	fmt.Println(resultat)
 	sendToOneResponse(conn, "robot", "retourner", resultat, etat, "", NbClients)
 
+	// On réinitialiser le robot
+	resetRobot()
+
 	// De nouveau libre pour une nouvelle exécution
 	PID = 0
 	sendToAllResponse("robot", "informer", "executing", 0, "", NbClients)
@@ -119,6 +122,21 @@ func executePythonScript(code string, conn *websocket.Conn) {
 	return outStr
 */
 }
+
+
+// Fonction pour ré-initialiser le robot (arrêt moteurs, beeper...)
+func resetRobot() {
+	// Message
+	fmt.Println(" => resetRobot() :")
+
+	// Lancement du script de réinitialisation du robot	
+	cmd := exec.Command("bash", "./reset_robot.sh")
+	err := cmd.Run()
+	if err != nil {
+		fmt.Println(" => ERROR with Run() :", err)
+	}
+}
+
 
 
 // Fonction pour envoyer une reponse sur la websocket
@@ -234,6 +252,9 @@ func ClientHandler(conn *websocket.Conn) {
 					break
 				}
 			}
+
+			// Quoiqu'il arrive on réinitialiser le robot
+			resetRobot()
 		}
 	}
 

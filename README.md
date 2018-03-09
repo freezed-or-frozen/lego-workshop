@@ -11,13 +11,15 @@ There are two main parts :
 Both communicates with websockets.
 
 
-2 - Functionalities
-===================
+2 - Goals and functionalities
+=============================
 Main functionalities :
-  * edit Python code in a web page (lines, color syntax)
-  * execute Python code remotely
-  * stop execution
-  * tell every client about robot's state (execution, clients connected)
+  - [x] edit Python code in a web page (lines, color syntax)
+  - [x] execute Python code remotely
+  - [x] stop execution
+  - [ ] init robot state after stopping execution (motos, beeper...)
+  - [x] tell every client about robot's state (execution, clients connected)
+  - [ ] add an help page with code example and documentation
 
 Future functionalities :
   * use nickname
@@ -43,7 +45,7 @@ $ go get github.com/gorilla/websocket
 -------------------------------
 Assuming you already download server.go on the robot :
 ```bash
-$ go build
+$ GOOS=linux GOARCH=arm GOARM=5 go build
 $ ./lego-workshop
 ```
 You can also execute **lego-workshop** program with Brickman interface and
@@ -66,3 +68,5 @@ ToDo list :
 Some useful links :
   * https://godoc.org/github.com/gorilla/websocket (websocket documentation)
   * https://gist.github.com/tmichel/7390690 (tutorial on gorilla webscoket in golang)
+  * https://mattrajca.github.io/GoEV3/ (robot programming with golang)
+  * http://www.ev3dev.org/docs/tutorials/tacho-motors/
