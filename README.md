@@ -17,15 +17,14 @@ Main functionalities :
   - [x] edit Python code in a web page (lines, color syntax)
   - [x] execute Python code remotely
   - [x] stop execution
-  - [ ] init robot state after stopping execution (motos, beeper...)
+  - [X] init robot state after stopping execution (motors...)
   - [x] tell every client about robot's state (execution, clients connected)
-  - [ ] add an help page with code example and documentation
+  - [X] add an help page with code example and documentation
 
 Future functionalities :
-  * use nickname
-  * add library documentation and help page
-  * print robot state (motors, sensors) with a SVG graphic
-  * add other language (C++)
+  - [ ] use nickname
+  - [ ] print robot state (motors, sensors) with a SVG graphic
+  - [ ] add other language (C++)
 
 
 3 - Tools
@@ -57,6 +56,7 @@ buttons on the Lego robot :
 4 - ToDo
 ========
 ToDo list :
+  * fix bugs
   * translate source code in english
   * refactor some parts of source code
   * add some unit tests
