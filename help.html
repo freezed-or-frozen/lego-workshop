@@ -24,15 +24,16 @@
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <form class="form-inline my-2 my-lg-0">
                 <input id="pseudo" class="form-control mr-sm-2" type="text" value="jbegood">
-                <button id="executer" type="button" class="btn btn-success my-2 my-sm-0">Exécuter</button>
-                <button id="arreter" type="button" class="btn btn-danger my-2 my-sm-0">Arrêter</button>
+                <button id="executer" type="button" class="btn btn-success my-2 my-sm-0">Start</button>
+                <button id="arreter" type="button" class="btn btn-danger my-2 my-sm-0">Stop</button>
+                <a href="./help.html" target="_blank"><button id="aider" type="button" class="btn btn-info my-2 my-sm-0">Help</button></a>
             </form>
         </div>
     </nav>
 
     <main role="main" class="container">
 
-        <h2>[Exemples]</h2>
+        <h2>[Examples]</h2>
         <div id="zone_ide">
             <form>
                 <textarea id="code_source">
@@ -181,29 +182,6 @@ ev3.Leds.all_off()
 
 
 
-#####################################
-### Le capteur lumineux (couleur) ###
-#####################################
-# Librairies utilisées
-import ev3dev.ev3 as ev3
-
-# Création du capteur lumineux
-cs = ev3.ColorSensor()
-
-# Tant que la couleur n'est pas blanche...
-while cs.color() != 6:
-    if cs.color() == 5:
-        ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.RED)
-    if cs.color() == 3:
-        ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
-    if cs.color() == 4:
-        ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.YELLOW)
-
-# On éteint tout
-ev3.Leds.all_off()
-
-
-
 #######################################
 ### Le capteur lumineux (réflexion) ###
 #######################################
@@ -221,6 +199,29 @@ for i in range(0, 10):
     else:
         ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
     time.sleep(1)
+
+# On éteint tout
+ev3.Leds.all_off()
+
+
+
+#####################################
+### Le capteur lumineux (couleur) ###
+#####################################
+# Librairies utilisées
+import ev3dev.ev3 as ev3
+
+# Création du capteur lumineux
+cs = ev3.ColorSensor()
+
+# Tant que la couleur n'est pas blanche...
+while cs.color() != 6:
+    if cs.color() == 5:
+        ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.RED)
+    if cs.color() == 3:
+        ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
+    if cs.color() == 4:
+        ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.YELLOW)
 
 # On éteint tout
 ev3.Leds.all_off()
@@ -354,7 +355,19 @@ while (b.any() == False):
 
         // Initialisation des boutons
         bouton_executer.disabled = true;
-        bouton_arreter.disabled = true;        
+        bouton_arreter.disabled = true;
+
+        // Configuration de l'éditeur en ligne Python
+        var editeur = CodeMirror.fromTextArea(document.getElementById("code_source"), {
+            mode: {name: "python",
+                   version: 3,
+                   singleLineStringErrors: false},
+            lineNumbers: true,
+            indentUnit: 4,
+            matchBrackets: true
+            //viewportMargin: Infinity
+        });
+        editeur.setSize(900, 600);
 
     </script>
 

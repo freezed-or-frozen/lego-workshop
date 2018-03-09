@@ -24,24 +24,25 @@
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <form class="form-inline my-2 my-lg-0">
                 <input id="pseudo" class="form-control mr-sm-2" type="text" value="jbegood">
-                <button id="executer" type="button" class="btn btn-success my-2 my-sm-0">Exécuter</button>
-                <button id="arreter" type="button" class="btn btn-danger my-2 my-sm-0">Arrêter</button>
+                <button id="executer" type="button" class="btn btn-success my-2 my-sm-0">Start</button>
+                <button id="arreter" type="button" class="btn btn-danger my-2 my-sm-0">Stop</button>
+                <a href="./help.html" target="_blank"><button id="aider" type="button" class="btn btn-info my-2 my-sm-0">Help</button></a>
             </form>
         </div>
     </nav>
 
     <main role="main" class="container">
-        <h2>[État du robot]</h2>
+        <h2>[Robot]</h2>
         <div class="row">
             <div class="col">
-                <div id="network" class="alert alert-info" role="alert">Connexion robot => <strong>...</strong></div>
+                <div id="network" class="alert alert-info" role="alert">Connection => <strong>...</strong></div>
             </div>
             <div class="col">
-                <div id="execution" class="alert alert-info" role="alert">Exécution en cours => <strong>...</strong></div>
+                <div id="execution" class="alert alert-info" role="alert">Execution => <strong>...</strong></div>
             </div>
         </div>
 
-        <h2>[Éditeur de code]</h2>
+        <h2>[Éditor]</h2>
         <div id="zone_ide">
             <form>
                 <textarea id="code_source">
@@ -55,7 +56,7 @@ for i in range(0, 5):
                 </textarea>
             </form>
 
-            <h2>[Sortie]</h2>
+            <h2>[Output]</h2>
             <div id="sortie" class="alert alert-info" role="alert">...</div>
         </div><!-- zone_ide -->
     </main>
@@ -87,6 +88,7 @@ for i in range(0, 5):
         var pseudo = document.getElementById("pseudo");
         var bouton_executer = document.getElementById("executer");
         var bouton_arreter = document.getElementById("arreter");
+        var bouton_aider = document.getElementById("aider");
         var zone_sortie = document.getElementById("sortie");
         var zone_network = document.getElementById("network");
         var zone_execution = document.getElementById("execution");
@@ -103,7 +105,9 @@ for i in range(0, 5):
             lineNumbers: true,
             indentUnit: 4,
             matchBrackets: true
+            //viewportMargin: 20
         });
+        editeur.setSize(800, 500);
 
         // Gestion de la websocket
         var ip = location.host;
@@ -148,7 +152,7 @@ for i in range(0, 5):
                         bouton_executer.disabled = true;
                         bouton_arreter.disabled = false;
                     }
-                    zone_execution.innerHTML = "Exécution en cours => <strong>(" + trame.exec_pid + ")</strong>";
+                    zone_execution.innerHTML = "Exécution en cours => <strong>(PID=" + trame.exec_pid + ")</strong>";
                 }
             }
 
@@ -216,6 +220,12 @@ for i in range(0, 5):
             // Envoi au travers de la websocket après JSONification
             ws.send( JSON.stringify(trame) );
         });
+
+
+        // Gestion du bouton "Help"
+        $("#aider").click(function() {
+        });
+
     </script>
 
 </body>

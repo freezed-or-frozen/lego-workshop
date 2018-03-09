@@ -129,7 +129,7 @@ func resetRobot() {
 	// Message
 	fmt.Println(" => resetRobot() :")
 
-	// Lancement du script de réinitialisation du robot	
+	// Lancement du script de réinitialisation du robot
 	cmd := exec.Command("bash", "./reset_robot.sh")
 	err := cmd.Run()
 	if err != nil {
@@ -293,7 +293,7 @@ func StaticFileHandler(response http.ResponseWriter, request *http.Request) {
 func main() {
 	// Bannière d'accueil du serveur
 	fmt.Printf("*********************************\n")
-	fmt.Printf("*** LEGO Workshop server v0.3 ***\n")
+	fmt.Printf("*** LEGO Workshop server v0.4 ***\n")
 	fmt.Printf("*********************************\n")
 	fmt.Println(" => Lancement en cours...")
 
