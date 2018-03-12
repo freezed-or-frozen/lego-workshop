@@ -296,7 +296,7 @@ func StaticFileHandler(response http.ResponseWriter, request *http.Request) {
 func main() {
 	// Bannière d'accueil du serveur
 	fmt.Printf("*********************************\n")
-	fmt.Printf("*** LEGO Workshop server v0.4 ***\n")
+	fmt.Printf("*** LEGO Workshop server v1.0 ***\n")
 	fmt.Printf("*********************************\n")
 	fmt.Println(" => Lancement en cours...")
 
