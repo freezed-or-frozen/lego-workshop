@@ -40,7 +40,7 @@ var PythonScript *exec.Cmd
 
 // Fonction pour lancer un script Python dans un nouveau processus
 func writePythonScript(code string) {
-	fmt.Println(" => Ecriture du code source dans todo.py :\n", code)
+	fmt.Println(" => Writing Python source code in todo.py :\n", code)
 
 	// Conversion en octets
 	octets := []byte(code)
@@ -59,7 +59,7 @@ func executePythonScript(who string, code string, conn *websocket.Conn) {
 	writePythonScript(code)
 
 	// Exécution du script
-	fmt.Println(" => Lancement du script todo.py : ")
+	fmt.Println(" => Launching Python script : todo.py : ")
 	cmd := exec.Command("python3", "./todo.py")
 	PythonScript = cmd
 
@@ -71,12 +71,12 @@ func executePythonScript(who string, code string, conn *websocket.Conn) {
 	// Lancement du script Python
 	err := cmd.Start()
 	PID = cmd.Process.Pid
-	fmt.Println("  + lancement avec PID : ", PID)
+	fmt.Println("  + Launchingched with PID : ", PID)
 	sendToAllResponse(who, "informer", "executing", PID, "", NbClients)
 
 	// Attente de la fin du script
 	err = cmd.Wait()
-	fmt.Println("  + arrêt du processus : ", err)
+	fmt.Println("  + stop process : ", err)
 	etat := 0
 
 	resultat := ""
@@ -129,7 +129,7 @@ func executePythonScript(who string, code string, conn *websocket.Conn) {
 // Fonction pour ré-initialiser le robot (arrêt moteurs, beeper...)
 func resetRobot() {
 	// Message
-	fmt.Println(" => resetRobot() :")
+	fmt.Println(" => Resetting robot with resetRobot() :")
 
 	// Lancement du script de réinitialisation du robot
 	cmd := exec.Command("bash", "./reset_robot.sh")
@@ -198,7 +198,7 @@ func removeClient(conn *websocket.Conn) {
 			Clients[i] = nil
 		}
 	}
-	fmt.Println(" => removeClient :", Clients)
+	fmt.Println(" => Remove web client with removeClient() :", Clients)
 
 	// Fermeture de la connexion
 	conn.Close()
@@ -246,7 +246,7 @@ func ClientHandler(conn *websocket.Conn) {
 
 			}
 		} else if (requete.Action == "arreter") {
-			fmt.Println("Demande d'arret en cours avec PID=", PID)
+			fmt.Println("Stopping process PID=", PID)
 			if (PID != 0) {
 				UID = requete.Source
 				err := PythonScript.Process.Kill()
@@ -298,7 +298,7 @@ func main() {
 	fmt.Printf("*********************************\n")
 	fmt.Printf("*** LEGO Workshop server v1.0 ***\n")
 	fmt.Printf("*********************************\n")
-	fmt.Println(" => Lancement en cours...")
+	fmt.Println(" => Starting server...")
 
 	// Enregistrement de la fonction gérant les websockets
 	http.HandleFunc("/ws", WebsocketHandler)
