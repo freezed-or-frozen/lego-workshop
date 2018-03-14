@@ -147,12 +147,14 @@ for i in range(0, 5):
                         zone_execution.className="alert alert-info";
                         bouton_executer.disabled = false;
                         bouton_arreter.disabled = true;
+                        zone_execution.innerHTML = "Execution => <strong>none (pid=" + trame.exec_pid + ")</strong>";
                     } else {
                         zone_execution.className="alert alert-warning";
                         bouton_executer.disabled = true;
                         bouton_arreter.disabled = false;
+                        zone_execution.innerHTML = "Execution => <strong>in progress (pid=" + trame.exec_pid + ")</strong> by <em>" + trame.source + "</em>";
                     }
-                    zone_execution.innerHTML = "Execution => <strong>OK (pid=" + trame.exec_pid + ")</strong> by <em>" + trame.source + "</em>";
+
                 }
             }
 
