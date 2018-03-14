@@ -9,6 +9,12 @@ body {
 .logo {
     padding-right: 20px;
 }
+
+/*
+#executer #arreter #paniquer #aider {
+    margin-left: 20px;
+}
+*/
 /*
 #zone_ide {
   width: 400px;
@@ -16,9 +22,9 @@ body {
 }
 */
 
-/*
+
 .CodeMirror {
-  border: 1px solid #eee;
-  height: auto;
+    background-color: #fcfcfc;
+    border: 1px solid #eee;
+
 }
-*/

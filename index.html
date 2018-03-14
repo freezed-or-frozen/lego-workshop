@@ -18,34 +18,30 @@
 
 <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-        <img class="logo" src="img/lego_mindstorm_ev3.png" />
+        <img class="logo" src="img/logo_lycee.png" />
         <a class="navbar-brand" href="#"> :: LEGO Workshop ::</a>
         <img class="logo" src="img/lego_mindstorm_ev3.png" />
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <form class="form-inline my-2 my-lg-0">
                 <input id="pseudo" class="form-control mr-sm-2" type="text" value="your_name">
                 <button id="executer" type="button" class="btn btn-success my-2 my-sm-0">Start</button>
-                <button id="arreter" type="button" class="btn btn-danger my-2 my-sm-0">Stop</button>
+                <button id="arreter" type="button" class="btn btn-warning my-2 my-sm-0">Stop</button>
+                <button id="paniquer" type="button" class="btn btn-danger my-2 my-sm-0">Emergency!</button>
                 <a href="./help.html" target="_blank"><button id="aider" type="button" class="btn btn-info my-2 my-sm-0">Help</button></a>
             </form>
         </div>
     </nav>
 
     <main role="main" class="container">
-        <h2>[Robot]</h2>
-        <div class="row">
-            <div class="col">
-                <div id="network" class="alert alert-info" role="alert">Connection => <strong>...</strong></div>
-            </div>
-            <div class="col">
-                <div id="execution" class="alert alert-info" role="alert">Execution => <strong>...</strong></div>
-            </div>
-        </div>
 
-        <h2>[Éditor]</h2>
-        <div id="zone_ide">
-            <form>
-                <textarea id="code_source">
+        <div class="row">
+
+            <!-- EDITOR column -->
+            <div class="col">
+                <h2>[Editor]</h2>
+                <div id="zone_ide">
+                    <form>
+                        <textarea id="code_source">
 # Librairies utilisées
 import time
 
@@ -53,12 +49,21 @@ import time
 for i in range(0, 5):
     print("Hello world")
     time.sleep(1)
-                </textarea>
-            </form>
+                        </textarea>
+                    </form>
+                </div><!-- zone_ide -->
+            </div><!-- Editor column end -->
 
-            <h2>[Output]</h2>
-            <div id="sortie" class="alert alert-info" role="alert">...</div>
-        </div><!-- zone_ide -->
+            <!-- STATE column -->
+            <div class="col">
+                <h2>[State]</h2>
+                <div id="network" class="alert alert-info" role="alert">Connection => <strong>...</strong></div>
+                <div id="execution" class="alert alert-info" role="alert">Execution => <strong>...</strong></div>
+
+                <h2>[Program output]</h2>
+                <div id="sortie" class="alert alert-info" role="alert">...</div>
+            </div><!-- State column end -->
+        </div>
     </main>
 
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
@@ -86,9 +91,12 @@ for i in range(0, 5):
 
         // Les variables
         var pseudo = document.getElementById("pseudo");
+        
         var bouton_executer = document.getElementById("executer");
         var bouton_arreter = document.getElementById("arreter");
         var bouton_aider = document.getElementById("aider");
+        var bouton_paniquer = document.getElementById("paniquer");
+
         var zone_sortie = document.getElementById("sortie");
         var zone_network = document.getElementById("network");
         var zone_execution = document.getElementById("execution");
@@ -107,7 +115,7 @@ for i in range(0, 5):
             matchBrackets: true
             //viewportMargin: 20
         });
-        editeur.setSize(800, 500);
+        editeur.setSize(600, 600);
 
         // Gestion de la websocket
         var ip = location.host;
@@ -140,6 +148,17 @@ for i in range(0, 5):
             if (trame.action == "informer") {
                 if (trame.details == "clients") {
                     zone_network.innerHTML = "Connection => <strong>OK (" + trame.clients + ")</strong>";
+                    if (trame.exec_pid == 0) {
+                        zone_execution.className="alert alert-info";
+                        bouton_executer.disabled = false;
+                        bouton_arreter.disabled = true;
+                        zone_execution.innerHTML = "Execution => <strong>none</strong>";
+                    } else {
+                        zone_execution.className="alert alert-warning";
+                        bouton_executer.disabled = true;
+                        bouton_arreter.disabled = false;
+                        zone_execution.innerHTML = "Execution => <strong>" + trame.exec_pid + "</strong> by <strong>" + trame.source + "</strong>";
+                    }
                 }
 
                 if (trame.details == "executing") {
@@ -147,27 +166,27 @@ for i in range(0, 5):
                         zone_execution.className="alert alert-info";
                         bouton_executer.disabled = false;
                         bouton_arreter.disabled = true;
+                        zone_execution.innerHTML = "Execution => <strong>none</strong>";
                     } else {
                         zone_execution.className="alert alert-warning";
                         bouton_executer.disabled = true;
                         bouton_arreter.disabled = false;
+                        zone_execution.innerHTML = "Execution => <strong>" + trame.exec_pid + "</strong> by <strong>" + trame.source + "</strong>";
                     }
-                    zone_execution.innerHTML = "Execution => <strong>OK (pid=" + trame.exec_pid + ")</strong> by <em>" + trame.source + "</em>";
                 }
             }
 
             if (trame.action == "retourner") {
                 if (trame.exec_pid == 0) {
                     zone_sortie.className="alert alert-success";
-                    zone_sortie.innerHTML = "<strong>SUCCESS</strong> by <em>" + trame.source + "</em><br /><pre>" + trame.details + "</pre>";
+                    zone_sortie.innerHTML = "<strong>SUCCESS</strong> by <strong>" + trame.source + "</strong><br /><pre>" + trame.details + "</pre>";
                 } else if (trame.exec_pid == 100) {
                     zone_sortie.className="alert alert-danger";
-                    zone_sortie.innerHTML = "<strong>ERROR</strong> by <em>" + trame.source + "</em><br /><pre>" + trame.details + "</pre>";
+                    zone_sortie.innerHTML = "<strong>ERROR</strong> by <strong>" + trame.source + "</strong><br /><pre>" + trame.details + "</pre>";
                 } else if (trame.exec_pid >= 566) {
                     zone_sortie.className="alert alert-danger";
-                    zone_sortie.innerHTML = "<strong>KILLED</strong> by <em>" + trame.source + "</em><br /><pre>" + trame.details + "</pre>";
+                    zone_sortie.innerHTML = "<strong>KILLED</strong> by <strong>" + trame.source + "</strong><br /><pre>" + trame.details + "</pre>";
                 }
-
             }
             // Changement d'état du bouton
             //bouton_executer.disabled = false;
@@ -211,6 +230,24 @@ for i in range(0, 5):
             var trame = {
                 source: pseudo.value,
                 action: "arreter",
+                details: "",
+                exec_pid: 0,
+                exec_uid: "",
+                clients: 0
+            };
+
+            // Envoi au travers de la websocket après JSONification
+            ws.send( JSON.stringify(trame) );
+        });
+
+
+        // Gestion du bouton "Help"
+        $("#paniquer").click(function() {
+            // Préparation de la trame
+            console.log("Bouton [PANIQUER]");
+            var trame = {
+                source: pseudo.value,
+                action: "paniquer",
                 details: "",
                 exec_pid: 0,
                 exec_uid: "",

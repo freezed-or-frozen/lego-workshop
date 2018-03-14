@@ -186,7 +186,7 @@ func addClient(conn *websocket.Conn) {
 	fmt.Println(" => addClient :", Clients)
 
 	// Envoi d'un message d'information à tout le monde
-	sendToAllResponse("robot", "informer", "clients", 0, "", NbClients)
+	sendToAllResponse("robot", "informer", "clients", PID, "", NbClients)
 }
 
 
@@ -205,7 +205,7 @@ func removeClient(conn *websocket.Conn) {
 	NbClients--
 
 	// Envoi d'un message d'information à tout le monde
-	sendToAllResponse("robot", "informer", "clients", 0, "", NbClients)
+	sendToAllResponse("robot", "informer", "clients", PID, "", NbClients)
 }
 
 
@@ -229,6 +229,7 @@ func ClientHandler(conn *websocket.Conn) {
 
 		// Choix selon l'action à effectuer
 		if (requete.Action == "lancer") {
+			fmt.Println("ACTION=lancer")
 			// On teste si le robot est libre d'exécution
 			if (PID == 0) {
 				// On confirme le lancement de l'exécution
@@ -246,7 +247,7 @@ func ClientHandler(conn *websocket.Conn) {
 
 			}
 		} else if (requete.Action == "arreter") {
-			fmt.Println("Stopping process PID=", PID)
+			fmt.Println("ACTION=arreter", PID)
 			if (PID != 0) {
 				UID = requete.Source
 				err := PythonScript.Process.Kill()
@@ -258,6 +259,11 @@ func ClientHandler(conn *websocket.Conn) {
 
 			// Quoiqu'il arrive on réinitialiser le robot
 			resetRobot()
+		} else if (requete.Action == "paniquer") {
+			fmt.Println("ACTION=paniquer")
+			resetRobot()
+		} else {
+			fmt.Println("ACTION=???")
 		}
 	}
 
