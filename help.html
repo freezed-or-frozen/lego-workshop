@@ -353,10 +353,12 @@ while (b.any() == False):
         // Les variables
         var bouton_executer = document.getElementById("executer");
         var bouton_arreter = document.getElementById("arreter");
+        var bouton_paniquer = document.getElementById("paniquer");
 
         // Initialisation des boutons
         bouton_executer.disabled = true;
         bouton_arreter.disabled = true;
+        bouton_paniquer.disabled = true;
 
         // Configuration de l'éditeur en ligne Python
         var editeur = CodeMirror.fromTextArea(document.getElementById("code_source"), {
