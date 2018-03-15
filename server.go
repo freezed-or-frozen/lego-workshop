@@ -131,6 +131,7 @@ func resetRobot() {
 	// Message
 	fmt.Println(" => Resetting robot with resetRobot() :")
 
+	// killall
 	// Lancement du script de réinitialisation du robot
 	cmd := exec.Command("bash", "./reset_robot.sh")
 	err := cmd.Run()
@@ -257,7 +258,7 @@ func ClientHandler(conn *websocket.Conn) {
 				}
 			}
 
-			// Quoiqu'il arrive on réinitialiser le robot
+			// Quoiqu'il arrive on réinitialise le robot
 			resetRobot()
 		} else if (requete.Action == "paniquer") {
 			fmt.Println("ACTION=paniquer")
