@@ -71,7 +71,7 @@ func executePythonScript(who string, code string, conn *websocket.Conn) {
 	// Lancement du script Python
 	err := cmd.Start()
 	PID = cmd.Process.Pid
-	fmt.Println("  + Launchingched with PID : ", PID)
+	fmt.Println("  + Launching process with PID : ", PID)
 	sendToAllResponse(who, "informer", "executing", PID, "", NbClients)
 
 	// Attente de la fin du script
@@ -101,7 +101,7 @@ func executePythonScript(who string, code string, conn *websocket.Conn) {
 	sendToOneResponse(conn, origine, "retourner", resultat, etat, "", NbClients)
 
 	// On réinitialiser le robot
-	resetRobot()
+	//resetRobot()
 
 	// De nouveau libre pour une nouvelle exécution
 	PID = 0
@@ -130,13 +130,20 @@ func executePythonScript(who string, code string, conn *websocket.Conn) {
 func resetRobot() {
 	// Message
 	fmt.Println(" => Resetting robot with resetRobot() :")
-
+/*
 	// killall
 	// Lancement du script de réinitialisation du robot
-	cmd := exec.Command("bash", "./reset_robot.sh")
-	err := cmd.Run()
-	if err != nil {
-		fmt.Println(" => ERROR with Run() :", err)
+	cmd1 := exec.Command("killall", "python3")
+	err1 := cmd1.Run()
+	if err1 != nil {
+		fmt.Println(" => ERROR1 with Run() killall python3:", err1)
+	}
+*/
+	// Lancement du script de réinitialisation du robot
+	cmd2 := exec.Command("bash", "/home/robot/lego-workshop/reset_robot.sh")
+	err2 := cmd2.Run()
+	if err2 != nil {
+		fmt.Println(" => ERROR2 with Run() /home/robot/lego-workshop/reset_robot.sh:", err2)
 	}
 }
 
@@ -303,7 +310,7 @@ func StaticFileHandler(response http.ResponseWriter, request *http.Request) {
 func main() {
 	// Bannière d'accueil du serveur
 	fmt.Printf("*********************************\n")
-	fmt.Printf("*** LEGO Workshop server v1.0 ***\n")
+	fmt.Printf("*** LEGO Workshop server v1.2 ***\n")
 	fmt.Printf("*********************************\n")
 	fmt.Println(" => Starting server...")
 
