@@ -81,10 +81,12 @@ ToDo list :
   * ...
 
 
-5 - Webography
-===============
-Some useful links :
-  * https://godoc.org/github.com/gorilla/websocket (websocket documentation)
-  * https://gist.github.com/tmichel/7390690 (tutorial on gorilla webscoket in golang)
-  * https://mattrajca.github.io/GoEV3/ (robot programming with golang)
-  * http://www.ev3dev.org/docs/tutorials/tacho-motors/
+5 - Tools & thanks
+==================
+Tools used for this project and thanks associated :
+  * LEGO Mindstorm EV3 robot (https://www.lego.com/en-us/mindstorms/products/mindstorms-ev3-31313)
+  * EV3DEV (http://www.ev3dev.org/)
+  * Golang (https://golang.org/)
+  * Gorilla websockets (https://github.com/gorilla/websocket)
+  * Bootstrap (https://getbootstrap.com/)
+  * CodeMirror (https://codemirror.net/)

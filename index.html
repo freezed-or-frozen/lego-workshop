@@ -8,12 +8,12 @@
     <title>LEGO Workshop</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!--<link href="css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
     <link rel="stylesheet" href="css/codemirror.css">
     <link rel="stylesheet" href="css/custom.css">
     <script src="js/codemirror.js"></script>
     <script src="js/python.js"></script>
-    <script src="js/mes_fonctions.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
 </head>
 
 <body>
@@ -27,7 +27,7 @@
                 <button id="executer" type="button" class="btn btn-success my-2 my-sm-0">Start</button>
                 <button id="arreter" type="button" class="btn btn-warning my-2 my-sm-0">Stop</button>
                 <button id="paniquer" type="button" class="btn btn-danger my-2 my-sm-0">Emergency!</button>
-                <a href="./help.html" target="_blank"><button id="aider" type="button" class="btn btn-info my-2 my-sm-0">Help</button></a>
+                <button id="aider" type="button" class="btn btn-info my-2 my-sm-0" data-toggle="modal" data-target="#aboutModal">About</button>
             </form>
         </div>
     </nav>
@@ -66,28 +66,40 @@ for i in range(0, 5):
         </div>
     </main>
 
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <!-- Modal for [About] button -->
+    <div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">About this software</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>LEGO Workshop</strong> is a web IDE written in Golang in order to develop Python scripts for Lego Mindstorm EV3 robot.</p>
+                    <ul>
+                        <li>Version => <strong>1.2</strong></li>
+                        <li>License => <strong>GPLv3</strong></li>
+                        <li>Author  => <strong>David SALLÉ</strong></li>
+                    </ul>
+                    <p>More informations here :<br /> <a href="https://github.com/freezed-or-frozen/lego-workshop">https://github.com/freezed-or-frozen/lego-workshop</a></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Javascript section -->
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>-->
+    <!--<script src="js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">-->
+    <!--<script src="js/jquery-slim.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">-->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script type="text/javascript" charset="utf-8">
-        /*
-        // Création de la socket.io
-        var socket = io.connect("http://" + document.domain + ":" + location.port);
-
-        // Enregistrement des fonctions associées aux événements
-        socket.on("connect", function() {
-            socket.emit("message", {data: 'I\'m connected!'});
-        });
-
-        socket.on("execution_start", function() {
-            //$("#executer").prop("disabled", true);
-            //$("#arreter").prop("disabled", false);
-        });
-
-        socket.on("execution_stop", function() {
-            //$("#executer").prop("disabled", false);
-            //$("#arreter").prop("disabled", true);
-        });
-        */
-
 
         // Les variables
         var pseudo = document.getElementById("pseudo");
