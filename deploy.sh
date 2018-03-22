@@ -24,8 +24,6 @@ echo "  => js directory"
 sshpass -p 'maker' scp -r js robot@$IP_ROBOT:/home/robot/lego-workshop/
 echo "  => index.html file"
 sshpass -p 'maker' scp index.html robot@$IP_ROBOT:/home/robot/lego-workshop/
-echo "  => help.html file"
-sshpass -p 'maker' scp help.html robot@$IP_ROBOT:/home/robot/lego-workshop/
 echo "  => reset_robot.sh file"
 sshpass -p 'maker' scp reset_robot.sh robot@$IP_ROBOT:/home/robot/lego-workshop/
 echo "  => start_lego-workshop.sh file"
