@@ -78,7 +78,7 @@ print("Hello world")
                 </div>
 
                 <h2>[Program output]</h2>
-                <div id="sortie" class="alert alert-info" role="alert">...</div>
+                <div id="sortie" class="alert alert-info" role="alert"><p class="mb-0">...</p></div>
             </div><!-- State column end -->
         </div>
     </main>
@@ -219,15 +219,19 @@ print("Hello world")
             }
 
             if (trame.action == "retourner") {
+                // Prepare program output for HTML printing
+                trame.details = trame.details.replace(new RegExp("\r?\n", "g"), "<br />");
+
+                // Print the message in the program output div
                 if (trame.exec_pid == 0) {
                     zone_sortie.className="alert alert-success";
-                    zone_sortie.innerHTML = "<strong>SUCCESS</strong> by <strong>" + trame.source + "</strong><br /><pre>" + trame.details + "</pre>";
+                    zone_sortie.innerHTML = "<p class=\"mb-0\"><strong>SUCCESS</strong> by <strong>" + trame.source + "</strong></p><p class=\"mb-0 font4code\">" + trame.details + "</p>";
                 } else if (trame.exec_pid == 100) {
                     zone_sortie.className="alert alert-danger";
-                    zone_sortie.innerHTML = "<strong>ERROR</strong> by <strong>" + trame.source + "</strong><br /><pre>" + trame.details + "</pre>";
+                    zone_sortie.innerHTML = "<p class=\"mb-0\"><strong>ERROR</strong> by <strong>" + trame.source + "</strong></p><p class=\"mb-0 font4code\">" + trame.details + "</p>";
                 } else if (trame.exec_pid >= 566) {
                     zone_sortie.className="alert alert-danger";
-                    zone_sortie.innerHTML = "<strong>KILLED</strong> by <strong>" + trame.source + "</strong><br /><pre>" + trame.details + "</pre>";
+                    zone_sortie.innerHTML = "<p class=\"mb-0\"><strong>KILLED</strong> by <strong>" + trame.source + "</strong></p><p class=\"mb-0 font4code\">" + trame.details + "</p>";
                 }
             }
             // Changement d'état du bouton

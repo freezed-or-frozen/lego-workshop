@@ -29,6 +29,10 @@ body {
 
 }
 
-. btn-custom {
+.btn-custom {
     width: 30px;
+}
+
+.font4code {
+  font-family: courier;
 }
