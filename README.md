@@ -19,12 +19,13 @@ Main functionalities :
   - [x] stop execution
   - [X] init robot state after stopping execution (motors...)
   - [x] tell every client about robot's state (execution, clients connected)
-  - [X] add an help page with code example and documentation
+  - [ ] add an help page with code example and documentation
 
 Future functionalities :
   - [X] use nickname
   - [ ] print robot state (motors, sensors) with a SVG graphic
   - [ ] add other language (C++)
+  - [ ] upload file (music, image files)
 
 
 3 - Installation
@@ -90,3 +91,4 @@ Tools used for this project and thanks associated :
   * Gorilla websockets (https://github.com/gorilla/websocket)
   * Bootstrap (https://getbootstrap.com/)
   * CodeMirror (https://codemirror.net/)
+  * Fontawesome (https://fontawesome.com/)
