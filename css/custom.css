@@ -28,3 +28,7 @@ body {
     border: 1px solid #eee;
 
 }
+
+. btn-custom {
+    width: 30px;
+}

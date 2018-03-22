@@ -7,12 +7,18 @@
 
     <title>LEGO Workshop</title>
 
+    <!-- For Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <!--<link href="css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
+
+    <!-- For CodeMirror -->
     <link rel="stylesheet" href="css/codemirror.css">
     <link rel="stylesheet" href="css/custom.css">
     <script src="js/codemirror.js"></script>
     <script src="js/python.js"></script>
+
+    <!-- For Fontawesome -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/solid.js" integrity="sha384-+Ga2s7YBbhOD6nie0DzrZpJes+b2K1xkpKxTFFcx59QmVPaSA8c7pycsNaFwUK6l" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/fontawesome.js" integrity="sha384-7ox8Q2yzO/uWircfojVuCQOZl+ZZBg2D2J5nkpLqzH1HY0C1dHlTKIbpRz/LG23c" crossorigin="anonymous"></script>
 
 </head>
 
@@ -23,11 +29,20 @@
         <img class="logo" src="img/lego_mindstorm_ev3.png" />
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <form class="form-inline my-2 my-lg-0">
-                <input id="pseudo" class="form-control mr-sm-2" type="text" value="your_name">
-                <button id="executer" type="button" class="btn btn-success my-2 my-sm-0">Start</button>
-                <button id="arreter" type="button" class="btn btn-warning my-2 my-sm-0">Stop</button>
-                <button id="paniquer" type="button" class="btn btn-danger my-2 my-sm-0">Emergency!</button>
-                <button id="aider" type="button" class="btn btn-info my-2 my-sm-0" data-toggle="modal" data-target="#aboutModal">About</button>
+                <input id="pseudo" class="form-control mr-sm-2" type="text" value="your_name" min="5" max="15">
+                <button id="executer" type="button" class="btn btn-success my-2 my-sm-0">
+                    <i class="fas fa-play"></i>
+                </button>
+                <button id="arreter" type="button" class="btn btn-warning my-2 my-sm-0">
+                    <i class="fas fa-stop"></i>
+                </button>
+                <button id="paniquer" type="button" class="btn btn-danger my-2 my-sm-0">
+                    <i class="fas fa-times"></i>
+                </button>
+                <button id="aider" type="button" class="btn btn-info my-2 my-sm-0" data-toggle="modal" data-target="#aboutModal">
+                    <i class="fas fa-info-circle"></i>
+                </button>
+                <!-- <i class="fas fa-upload"></i> -->
             </form>
         </div>
     </nav>
@@ -57,8 +72,12 @@ for i in range(0, 5):
             <!-- STATE column -->
             <div class="col">
                 <h2>[State]</h2>
-                <div id="network" class="alert alert-info" role="alert">Connection => <strong>...</strong></div>
-                <div id="execution" class="alert alert-info" role="alert">Execution => <strong>...</strong></div>
+                <div id="network" class="alert alert-info" role="alert">
+                    <i class="fas fa-wifi"></i> <i class="fas fa-long-arrow-alt-right"></i> <strong>...</strong>
+                </div>
+                <div id="execution" class="alert alert-info" role="alert">
+                    <i class="fas fa-cog"></i> <i class="fas fa-long-arrow-alt-right"></i> <strong>...</strong>
+                </div>
 
                 <h2>[Program output]</h2>
                 <div id="sortie" class="alert alert-info" role="alert">...</div>
@@ -77,6 +96,27 @@ for i in range(0, 5):
                     </button>
                 </div>
                 <div class="modal-body">
+                    <h3>Usage</h3>
+                    <p><button id="executer" type="button" class="btn-custom btn btn-success">
+                        <i class="fas fa-play"></i>
+                    </button> Upload and execute a Python script on the robot.</p>
+                    <p><button id="arreter" type="button" class="btn-custom btn btn-warning">
+                        <i class="fas fa-stop"></i>
+                    </button> Stop a Python script on the robot.</p>
+                    <p><button id="paniquer" type="button" class="btn-custom btn btn-danger">
+                        <i class="fas fa-times"></i>
+                    </button> Stop and reset the robot.</p>
+                    <p><button id="aider" type="button" class="btn-custom btn btn-info">
+                        <i class="fas fa-info-circle"></i>
+                    </button> Print this page.</p>
+                    <p><button id="aider" type="button" class="btn-custom btn btn-secondary">
+                        <i class="fas fa-wifi"></i>
+                    </button> Network state between your PC and the robot.</p>
+                    <p><button id="aider" type="button" class="btn-custom btn btn-secondary">
+                        <i class="fas fa-cog"></i>
+                    </button> Python script execution ID and its owner.</p>
+                    <br />
+                    <h3>Credits</h3>
                     <p>Made with ❤ by David SALLÉ for the <a href="http://www.lycee-saintandre-niort.com">Saint-André high school</a> (ICN and ISN computer science classes)</p>
                     <p>More informations here :<br /> <a href="https://github.com/freezed-or-frozen/lego-workshop">https://github.com/freezed-or-frozen/lego-workshop</a></p>
                 </div>
@@ -129,14 +169,14 @@ for i in range(0, 5):
         var ws = new WebSocket("ws://" + ip + "/ws");
 
         ws.onopen = function(evt) {
-            zone_network.innerHTML = "Connection => <strong>OK (...)</strong>";
+            zone_network.innerHTML = "<i class=\"fas fa-wifi\"></i> <i class=\"fas fa-long-arrow-alt-right\"></i> <strong>OK (...)</strong>";
             zone_network.className="alert alert-success";
             console.log("OPEN");
             bouton_executer.disabled = false;
         }
 
         ws.onclose = function(evt) {
-            zone_network.innerHTML = "Connection => <strong>LOST (...)</strong>";
+            zone_network.innerHTML = "<i class=\"fas fa-wifi\"></i> <i class=\"fas fa-long-arrow-alt-right\"></i> <strong>LOST (...)</strong>";
             zone_network.className="alert alert-danger";
             console.log("CLOSE");
             ws = null;
@@ -154,17 +194,17 @@ for i in range(0, 5):
 
             if (trame.action == "informer") {
                 if (trame.details == "clients") {
-                    zone_network.innerHTML = "Connection => <strong>OK (" + trame.clients + ")</strong>";
+                    zone_network.innerHTML = "<i class=\"fas fa-wifi\"></i> <i class=\"fas fa-long-arrow-alt-right\"></i> <strong>OK (" + trame.clients + ")</strong>";
                     if (trame.exec_pid == 0) {
                         zone_execution.className="alert alert-info";
                         bouton_executer.disabled = false;
                         bouton_arreter.disabled = true;
-                        zone_execution.innerHTML = "Execution => <strong>none</strong>";
+                        zone_execution.innerHTML = "<i class=\"fas fa-cog\"></i> <i class=\"fas fa-long-arrow-alt-right\"></i> <strong>none</strong>";
                     } else {
                         zone_execution.className="alert alert-warning";
                         bouton_executer.disabled = true;
                         bouton_arreter.disabled = false;
-                        zone_execution.innerHTML = "Execution => <strong>" + trame.exec_pid + "</strong> by <strong>" + trame.source + "</strong>";
+                        zone_execution.innerHTML = "<i class=\"fas fa-cog fa-spin\"></i> <i class=\"fas fa-long-arrow-alt-right\"></i> <strong>PID_" + trame.exec_pid + "</strong> by <strong>" + trame.source + "</strong>";
                     }
                 }
 
@@ -173,12 +213,12 @@ for i in range(0, 5):
                         zone_execution.className="alert alert-info";
                         bouton_executer.disabled = false;
                         bouton_arreter.disabled = true;
-                        zone_execution.innerHTML = "Execution => <strong>none</strong>";
+                        zone_execution.innerHTML = "<i class=\"fas fa-cog\"></i> <i class=\"fas fa-long-arrow-alt-right\"></i> <strong>none</strong>";
                     } else {
                         zone_execution.className="alert alert-warning";
                         bouton_executer.disabled = true;
                         bouton_arreter.disabled = false;
-                        zone_execution.innerHTML = "Execution => <strong>" + trame.exec_pid + "</strong> by <strong>" + trame.source + "</strong>";
+                        zone_execution.innerHTML = "<i class=\"fas fa-cog fa-spin\"></i> <i class=\"fas fa-long-arrow-alt-right\"></i> <strong>PID_" + trame.exec_pid + "</strong> by <strong>" + trame.source + "</strong>";
                     }
                 }
             }
@@ -206,13 +246,23 @@ for i in range(0, 5):
         }
 
 
+        // Fonction pour lire et limiter la taille du pseudo
+        function readName()
+        {
+            var name = pseudo.value;
+            if(name.length > 12) {
+                name = name.substr(0, 12);
+            }
+            return name;
+        }
+
         // Gestion du bouton "Exécuter"
         $("#executer").click(function() {
 
             // Préparation de la trame
             console.log("Bouton [EXECUTER]");
             var trame = {
-                source: pseudo.value,
+                source: readName(),
                 action: "lancer",
                 details: editeur.getValue(),
                 exec_pid: 0,
@@ -235,7 +285,7 @@ for i in range(0, 5):
             // Préparation de la trame
             console.log("Bouton [ARRETER]");
             var trame = {
-                source: pseudo.value,
+                source: readName(),
                 action: "arreter",
                 details: "",
                 exec_pid: 0,
@@ -253,7 +303,7 @@ for i in range(0, 5):
             // Préparation de la trame
             console.log("Bouton [PANIQUER]");
             var trame = {
-                source: pseudo.value,
+                source: readName(),
                 action: "paniquer",
                 details: "",
                 exec_pid: 0,
