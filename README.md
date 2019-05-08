@@ -9,7 +9,7 @@ There are two main parts :
   * **server side** written in Golang to start and stop Python scripts remotely
   * **client side** written in HTML, CSS, Javascript to edit Python code
 Both communicates with websockets.
-
+![Alt text](/screenshots/legoworkshop1.png?raw=true "Lego Workshop web IDE")
 
 2 - Goals and functionalities
 =============================
