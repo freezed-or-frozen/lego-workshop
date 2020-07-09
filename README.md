@@ -3,13 +3,14 @@
 
 1 - Introduction
 ================
-LEGO Workshop is a web IDE to develop Python script for the Lego Mindstorm EV3 robot.
+LEGO Workshop is a web IDE to develop Python program for the Lego Mindstorm EV3 robot.
 It is something between IPython (Python web IDE) and Processing/arduino (simplicity)
 There are two main parts :
   * **server side** written in Golang to start and stop Python scripts remotely
   * **client side** written in HTML, CSS, Javascript to edit Python code
-Both communicates with websockets.
+Both communicates with websockets over a wifi link.
 ![Alt text](/screenshots/legoworkshop1.png?raw=true "Lego Workshop web IDE")
+
 
 2 - Goals and functionalities
 =============================
@@ -24,6 +25,7 @@ Main functionalities :
 Future functionalities :
   - [X] use nickname
   - [ ] print robot state (motors, sensors) with a SVG graphic
+  - [ ] save Python scripts on the robot
   - [ ] add other language (C++)
   - [ ] upload file (music, image files)
 
@@ -32,18 +34,17 @@ Future functionalities :
 ================
 3.1 - From binary version
 -------------------------
-Assuming you already install ev3dev Linux distribution on an SD card and buy
+Assuming you already have installed ev3dev Linux distribution on an SD card and buy
 an USB wifi dongle, you just need to upload **lego-workshop** binary to
 the robot with SSH
 ```bash
 $ git clone https://github.com/freezed-or-frozen/lego-workshop.git
-$ cd lego-workshop
-$ scp lego-workshop robot@1.2.3.4:/home/robot/ (password=maker)
+$ scp -r lego-workshop robot@1.2.3.4:/home/robot/ (password=maker)
 ```
 Now you can execute **lego-workshop** program with Brickman interface and
 buttons on the Lego robot :
   * File manager...
-  * lego-workshop
+  * start_lego-workshop.sh
 
 3.2 - From source version
 -------------------------
@@ -69,7 +70,7 @@ $ scp lego-workshop robot@1.2.3.4:/home/robot/ (password=maker)
 Now you can execute **lego-workshop** program with Brickman interface and
 buttons on the Lego robot :
   * File manager...
-  * lego-workshop
+  * start_lego-workshop.sh
 
 
 4 - ToDo
